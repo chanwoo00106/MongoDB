@@ -38,7 +38,11 @@ app.get('/list', (req, res) => {
 
 app.post('/add', (req,res) => {
     res.send('<h1>전송 완료</h1>');
-    db.collection('post').insertOne({title: req.body.title, date: req.body.date}, (error, result) => {
-        console.log('완료')
+    db.collection('counter').findOne({name: '개시물갯수'}, (error, result) => {
+        console.log(result.totalPost);
+        db.collection('post').insertOne({_id: result.totalPost++, title: req.body.title, date: req.body.date}, (error, result) => {
+            console.log('완료')
+        });
     });
+    
 })
