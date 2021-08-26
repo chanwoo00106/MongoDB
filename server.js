@@ -37,11 +37,10 @@ app.get('/list', (req, res) => {
 });
 
 app.post('/add', (req,res) => {
-    res.send('<h1>전송 완료</h1>');
-    db.collection('counter').findOne({name: '개시물갯수'}, (error, result) => {
-        console.log(result.totalPost);
+    res.send('<h1>전송 완료</h1><a href="/">돌아가기</a>');
+    db.collection('counter').findOne({name: '게시물갯수'}, (error, result) => {
         db.collection('post').insertOne({_id: result.totalPost++, title: req.body.title, date: req.body.date}, (error, result) => {
-            console.log('완료')
+            db.collection('counter').updateOne({name: '게시물갯수'}, {$inc: {totalPost: 1}});
         });
     });
     
