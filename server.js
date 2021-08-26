@@ -6,5 +6,5 @@ app.listen(8000, () => {
 });
 
 app.get('/', (req, res) => {
-    res.send('<h1>hello Teemo!</h1>')
+    res.sendFile(__dirname + '/index.html');
 });
