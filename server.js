@@ -23,7 +23,11 @@ MongoClient.connect(
 );
 
 app.get('/', (req, res) => {
-    res.render('index.ejs');
+    db.collection('post').find().toArray((error, result) => {
+        console.log(result);
+        if (error) console.log(error);
+        else res.render('index.ejs', {posts: result});
+    });
 });
 
 app.get('/write', (req, res) => {
