@@ -2,8 +2,8 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
-
 const MongoClient = require('mongodb').MongoClient;
+app.use('/public', express.static('public'))
 
 app.set('view engine', 'ejs');
 
@@ -21,17 +21,16 @@ MongoClient.connect(
 );
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.render('index.ejs');
 });
 
 app.get('/write', (req, res) => {
-    res.sendFile(__dirname + '/write.html');
+    res.render('write.ejs');
 });
 
 app.get('/list', (req, res) => {
     db.collection('post').find().toArray((error, result) => {
         if (error) console.error(error);
-        console.log(result);
         res.render('list.ejs', {posts: result});
     });
 });
@@ -51,4 +50,10 @@ app.delete('/delete', (req,res) => {
         if (error) res.status(400).send("실패");
         else res.status(200).send("성공");
     })
+});
+
+app.get('/detail/:id', (req, res) => {
+    db.collection('post').findOne({_id: Number(req.params.id)}, (error, result) => {
+        res.render('detail.ejs', {posts: result});
+    });
 });
