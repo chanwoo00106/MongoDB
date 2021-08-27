@@ -1,10 +1,12 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
-app.use(bodyParser.urlencoded({extended: true}));
+const methodOverride = require('method-override');
 const MongoClient = require('mongodb').MongoClient;
-app.use('/public', express.static('public'))
 
+app.use(methodOverride('_method'));
+app.use(bodyParser.urlencoded({extended: true}));
+app.use('/public', express.static('public'));
 app.set('view engine', 'ejs');
 
 MongoClient.connect(
@@ -55,5 +57,11 @@ app.delete('/delete', (req,res) => {
 app.get('/detail/:id', (req, res) => {
     db.collection('post').findOne({_id: Number(req.params.id)}, (error, result) => {
         res.render('detail.ejs', {posts: result});
+    });
+});
+
+app.get('/edit/:id', (req, res) => {
+    db.collection('post').findOne({_id: Number(req.params.id)}, (error, result) => {
+        res.render('edit.ejs', {posts: result});
     });
 });
