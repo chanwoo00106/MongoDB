@@ -44,10 +44,13 @@
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
     <script>
+        
         $.ajax({
             method: 'DELETE',
-            url: '',
-            data: ''
+            url: '/delete',
+            data: {_id: 1}
+        }).done(function(result){
+
         });
     </script>
 
