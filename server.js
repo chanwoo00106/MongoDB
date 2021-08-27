@@ -65,3 +65,10 @@ app.get('/edit/:id', (req, res) => {
         res.render('edit.ejs', {posts: result});
     });
 });
+
+app.put('/edit', (req, res) => {
+    db.collection('post').updateOne({_id: parseInt(req.body.id)}, {$set: {title: req.body.title, date: req.body.date}}, (error, result) => {
+        if(error) console.error(error);
+        else console.log(result);
+    });
+});

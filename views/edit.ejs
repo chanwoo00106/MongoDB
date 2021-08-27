@@ -18,7 +18,8 @@
     <%- include('nav.html') %>
 
     <div style="width: 50%; margin: 0 auto; margin-top: 5%;">
-        <form action="/add?_method=PUT" method="POST">
+        <form action="/edit?_method=PUT" method="POST">
+            <input type="text" name="id" style="display: none;" value="<%= posts._id %>">
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inputGroup-sizing-default">할일</span>
                 <input type="text" class="form-control" name="title" value="<%= posts.title %>">
