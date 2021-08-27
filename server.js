@@ -47,9 +47,8 @@ app.post('/add', (req,res) => {
 });
 
 app.delete('/delete', (req,res) => {
-    res.send("<h1>성공</h1>")
     db.collection('post').deleteOne({_id: parseInt(req.body._id)}, (error, result) => {
-        if (error) console.error(error);
-        else console.log('성공');
+        if (error) res.status(400).send("실패");
+        else res.status(200).send("성공");
     })
 });
