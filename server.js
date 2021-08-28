@@ -6,6 +6,7 @@ const MongoClient = require('mongodb').MongoClient;
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const session = require('express-session');
+require('dotenv').config();
 
 app.use(session({secret: '비밀코드', resave: true, saveUninitialized: false}));
 app.use(passport.initialize());
@@ -17,13 +18,13 @@ app.use('/public', express.static('public'));
 app.set('view engine', 'ejs');
 
 MongoClient.connect(
-    'mongodb+srv://chanwoo:<password>@cluster0.jvys6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    `mongodb+srv://chanwoo:${process.env.PASSWORD}@cluster0.jvys6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`,
     (error, client) => {
         if (error) return console.log(error);
         db = client.db('todoapp');
 
-        app.listen(8000, () => {
-            console.log('8080 port');
+        app.listen(process.env.PORT, () => {
+            console.log(`${process.env.PORT} port`);
         });
     }
 );
