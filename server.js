@@ -17,14 +17,12 @@ MongoClient.connect(
 
         app.listen(8000, () => {
             console.log('8080 port');
-            
         });
     }
 );
 
 app.get('/', (req, res) => {
     db.collection('post').find().toArray((error, result) => {
-        console.log(result);
         if (error) console.log(error);
         else res.render('index.ejs', {posts: result});
     });
@@ -48,7 +46,6 @@ app.post('/add', (req,res) => {
             db.collection('counter').updateOne({name: '게시물갯수'}, {$inc: {totalPost: 1}});
         });
     });
-    
 });
 
 app.delete('/delete', (req,res) => {
@@ -73,6 +70,16 @@ app.get('/edit/:id', (req, res) => {
 app.put('/edit', (req, res) => {
     db.collection('post').updateOne({_id: parseInt(req.body.id)}, {$set: {title: req.body.title, date: req.body.date}}, (error, result) => {
         if(error) console.error(error);
-        else console.log(result);
+        else console.log('완료');
+        res.redirect('/');
     });
 });
+
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const session = require('express-session');
+// 준비 완료!!
+
+app.use(session({secret: '비밀코드', resave: true, saveUninitialized: false}));
+app.use(passport.initialize());
+app.use(passport.session());
