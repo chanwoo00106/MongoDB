@@ -96,20 +96,30 @@ app.post('/login', passport.authenticate('local', {
 });
 
 passport.use(new LocalStrategy({
-  usernameField: 'id',
-  passwordField: 'pw',
-  session: true,
-  passReqToCallback: false,
-}, function (입력한아이디, 입력한비번, done) {
-  //console.log(입력한아이디, 입력한비번);
-  db.collection('login').findOne({ id: 입력한아이디 }, function (에러, 결과) {
-    if (에러) return done(에러)
+    // setting 하는 부분
+    usernameField: 'id',
+    passwordField: 'pw',
+    session: true,
+    passReqToCallback: false,
+}, function (inputId, inputPw, done) {
+    //console.log(inputId, inputPw);
+    db.collection('login').findOne({ id: inputId }, function (error, result) {
+      if (error) return done(error) // 아이디가 없을 때
+  
+      if (!result) return done(null, false, { message: '아이디가 존재하지 않습니다.' }) // 아이디가 없을 때
 
-    if (!결과) return done(null, false, { message: '존재하지않는 아이디요' })
-    if (입력한비번 == 결과.pw) {
-      return done(null, 결과)
-    } else {
-      return done(null, false, { message: '비번틀렸어요' })
-    }
-  })
+      if (inputPw == result.pw) {
+        return done(null, result) // 아이디도 있고 비번도 맞을 때
+      } else {
+        return done(null, false, { message: '비밀번호가 틀립니다.' }) // 비번이 아닐 때
+      }
+    })
 }));
+
+// session 만들기
+passport.serializeUser((user, done) => { // 바로 위에서 했던 결과가 여기로 옴
+    done(null, user.id);
+});
+passport.deserializeUser((id, done) => {
+    done(null, {});
+})
