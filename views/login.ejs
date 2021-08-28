@@ -18,15 +18,15 @@
     <%- include('nav.html') %>
 
     <div class="container" style="margin-top: 5%;">
-        <h4>ToDo Login</h4>
-        <form action="/add" method="POST">
+        <h4>Login</h4>
+        <form action="/login" method="POST">
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inputGroup-sizing-default">id</span>
-                <input type="text" class="form-control" name="title">
+                <input type="text" class="form-control" name="id">
             </div>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inputGroup-sizing-default">password</span>
-                <input type="text" class="form-control" name="date">
+                <input type="password" class="form-control" name="pw">
             </div>
             <button type="submit" class="btn btn-danger">Submit</button>
         </form>

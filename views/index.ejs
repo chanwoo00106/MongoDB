@@ -18,23 +18,9 @@
     <%- include('nav.html') %>
 
     <div class="jumbotron container">
-        <h1 class="display-4">ToDo List</h1>
-        <p class="lead">this page show ToDo</p>
+        <h1 class="display-4">ToDo</h1>
+        <p class="lead">this page is main</p>
         <hr class="my-4">
-        <h4>할일들</h4>
-
-        <div style="display: flex; flex-wrap: wrap;">
-            <% posts.forEach((x)=> { %>
-            <div class="card" style="width: 20%;">
-                <div class="card-body">
-                    <h5 class="card-title"><%= x.title %></h5>
-                    <h6 class="card-subtitle mb-2 text-muted"><%= x.date %></h6>
-                    <p class="card-text">어쩌고 저쩌고</p>
-                    <a href="/detail/<%= x._id %>" class="card-link">자세히 보기</a>
-                </div>
-            </div>
-            <% }); %>
-        </div>
     </div>
 
 

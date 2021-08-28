@@ -3,6 +3,13 @@ const express = require('express');
 const app = express();
 const methodOverride = require('method-override');
 const MongoClient = require('mongodb').MongoClient;
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const session = require('express-session');
+
+app.use(session({secret: '비밀코드', resave: true, saveUninitialized: false}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -21,12 +28,22 @@ MongoClient.connect(
     }
 );
 
-app.get('/', (req, res) => {
+app.get('/', loginTF, (req, res) => {
     db.collection('post').find().toArray((error, result) => {
         if (error) console.log(error);
-        else res.render('index.ejs', {posts: result});
+        else {
+            console.log(req.user);
+            res.render('mypage.ejs', {posts: result});
+        }
     });
 });
+function loginTF(req, res, next){
+    if (req.user){
+        next();
+    } else {
+        res.render('index.ejs');
+    }
+}
 
 app.get('/write', (req, res) => {
     res.render('write.ejs');
@@ -75,14 +92,7 @@ app.put('/edit', (req, res) => {
     });
 });
 
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
-const session = require('express-session');
-// 준비 완료!!
 
-app.use(session({secret: '비밀코드', resave: true, saveUninitialized: false}));
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 app.get('/login', (req, res) => {
@@ -94,6 +104,7 @@ app.post('/login', passport.authenticate('local', {
 }), (req, res) => {
     res.redirect('/');
 });
+
 
 passport.use(new LocalStrategy({
     // setting 하는 부분
@@ -120,6 +131,9 @@ passport.use(new LocalStrategy({
 passport.serializeUser((user, done) => { // 바로 위에서 했던 결과가 여기로 옴
     done(null, user.id);
 });
-passport.deserializeUser((id, done) => {
-    done(null, {});
+
+passport.deserializeUser((id, done) => { // 세션을 찾을 때 실행됨
+    db.collection('login').findOne({id: id}, (error, result) => {
+        done(null, result);
+    });
 })
