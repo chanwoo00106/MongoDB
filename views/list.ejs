@@ -53,15 +53,11 @@
 
         $("button.delete").click(function(e){
             const id = e.target.dataset.id;
-            const btn = $(this);
+            const btn = $(this).parent("li.list-group-item").fadeOut();
             $.ajax({
                 method: 'DELETE',
                 url: '/delete',
                 data: {_id: id}
-            }).done(function(result){
-                btn.parent("li.list-group-item").fadeOut();
-            }).fail(function(xhr, textStatus, errorThrown){
-                console.log(xhr, textStatus, errorThrown);
             });
         })
         

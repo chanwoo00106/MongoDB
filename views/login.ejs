@@ -18,7 +18,7 @@
     <%- include('nav.html') %>
 
     <div class="container" style="margin-top: 5%;">
-        <h4>Login</h4>
+        <h4>Sign in</h4>
         <form action="/login" method="POST">
             <div class="input-group mb-3">
                 <span class="input-group-text" id="inputGroup-sizing-default">id</span>
@@ -29,6 +29,21 @@
                 <input type="password" class="form-control" name="pw">
             </div>
             <button type="submit" class="btn btn-danger">Submit</button>
+        </form>
+    </div>
+
+    <div class="container" style="margin-top: 5%;">
+        <h4>Sign up</h4>
+        <form action="/register" method="POST">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">id</span>
+                <input type="text" class="form-control" name="id">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">password</span>
+                <input type="password" class="form-control" name="pw">
+            </div>
+            <button type="submit" class="btn btn-danger">가입하기</button>
         </form>
     </div>
 

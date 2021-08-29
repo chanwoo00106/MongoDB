@@ -54,14 +54,16 @@ app.get('/list', (req, res) => {
     if (req.query.search) {
         var condition = [
             {
-              $search: {
-                index: 'titleSearch',
-                text: {
-                  query: req.query.search,
-                  path: ['_id', 'title', 'date']  // 제목날짜 둘다 찾고 싶으면 ['제목', '날짜']
+                $search: {
+                    index: 'titleSearch',
+                    text: {
+                        query: req.query.search,
+                        path: 'title'  // 제목날짜 둘다 찾고 싶으면 ['제목', '날짜']
+                    }
                 }
-              }
-            }
+            },
+            {$sort: {_id: 1}},
+            {$limit: 10}
         ] 
         db.collection('post').aggregate(condition).toArray((error, result) => {
             if (error) console.log(error)
@@ -78,17 +80,30 @@ app.get('/list', (req, res) => {
 
 app.post('/add', (req,res) => {
     res.send('<h1>전송 완료</h1><a href="/">돌아가기</a>');
+    let save;
     db.collection('counter').findOne({name: '게시물갯수'}, (error, result) => {
-        db.collection('post').insertOne({_id: result.totalPost++, title: req.body.title, date: req.body.date}, (error, result) => {
+        if (!req.user) save = {_id: result.totalPost++, title: req.body.title, date: req.body.date, writer: 'none'};
+        else save = {_id: result.totalPost++, title: req.body.title, date: req.body.date, writer: req.user.id};
+
+        db.collection('post').insertOne(save, (error, result) => {
             db.collection('counter').updateOne({name: '게시물갯수'}, {$inc: {totalPost: 1}});
         });
     });
 });
 
 app.delete('/delete', (req,res) => {
-    db.collection('post').deleteOne({_id: parseInt(req.body._id)}, (error, result) => {
-        if (error) res.status(400).send("실패");
-        else res.status(200).send("성공");
+    db.collection('post').findOne({_id: parseInt(req.body._id)}, (error, result) => {
+        console.log(req.user.id)
+        console.log(result.writer);
+        if (!req.user && result.writer !== 'none') {
+
+        }
+        else if((result.writer === req.user.id) || (!req.user && result.writer === 'none') || (req.user && result.writer === 'none')){
+            db.collection('post').deleteOne({_id: parseInt(req.body._id)}, (error, result) => {
+                if (error) res.status(400).send("실패");
+                else res.status(200).send("성공");
+            })
+        }
     })
 });
 
@@ -157,3 +172,9 @@ passport.deserializeUser((id, done) => { // 세션을 찾을 때 실행됨
         done(null, result);
     });
 })
+
+app.post('/register', (req, res) => {
+    db.collection('login').insertOne({id: req.body.id, pw: req.body.pw}, (error, result) => {
+        res.redirect('/login');
+    });
+});
