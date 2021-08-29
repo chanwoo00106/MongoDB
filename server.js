@@ -6,6 +6,19 @@ const MongoClient = require('mongodb').MongoClient;
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const session = require('express-session');
+const multer = require('multer');
+
+let storage = multer.diskStorage({
+    destination: (req, res, cb) => {
+        cb(null, './public/image')
+    },
+    filename: (req, res, cb) => {
+        cb(null, file.originalname)
+    }
+});
+
+let upload = multer({storage})
+
 require('dotenv').config();
 
 // app.use는 요청과 응답 사이에 실행할 것을 적음
@@ -128,6 +141,13 @@ app.put('/edit', (req, res) => {
 });
 
 
+app.get('/upload', (req, res) => {
+    res.render('upload.ejs');
+});
+
+app.post('/upload', upload.single('profile'), (req, res) => {
+    res.send("<h2>업로드 완료</h2>")
+});
 
 
 app.get('/login', (req, res) => {
