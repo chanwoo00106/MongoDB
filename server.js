@@ -33,7 +33,7 @@ app.get('/', loginTF, (req, res) => {
     db.collection('post').find().toArray((error, result) => {
         if (error) console.log(error);
         else {
-            console.log(req.user);
+            // console.log(req.user);
             res.render('mypage.ejs', {posts: result});
         }
     });
@@ -51,10 +51,29 @@ app.get('/write', (req, res) => {
 });
 
 app.get('/list', (req, res) => {
-    db.collection('post').find().toArray((error, result) => {
-        if (error) console.error(error);
-        res.render('list.ejs', {posts: result});
-    });
+    if (req.query.search) {
+        var condition = [
+            {
+              $search: {
+                index: 'titleSearch',
+                text: {
+                  query: req.query.search,
+                  path: ['_id', 'title', 'date']  // 제목날짜 둘다 찾고 싶으면 ['제목', '날짜']
+                }
+              }
+            }
+        ] 
+        db.collection('post').aggregate(condition).toArray((error, result) => {
+            if (error) console.log(error)
+            else res.render('list.ejs', {posts: result});
+        });
+    }
+    else {
+        db.collection('post').find().toArray((error, result) => {
+            if (error) console.error(error);
+            res.render('list.ejs', {posts: result});
+        });
+    }
 });
 
 app.post('/add', (req,res) => {

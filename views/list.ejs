@@ -19,6 +19,13 @@
     
     <%- include('nav.html') %>
 
+    <h4 class="ml-2 my-3 text-center">서버에서 가져온 할일 리스트</h4>
+
+    <div class="container input-group mb-2">
+        <input id="search-input" type="text" class="form-control">
+        <button id="search" class="input-group-append btn btn-danger">검색</button>
+    </div>
+
     <div class="container">
         <h3 class="ml-2 my-3">ToDo list</h3>
         <ul class="list-group" style="gap: 5px;">
@@ -36,6 +43,14 @@
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
 
     <script>
+
+        $('#search').click(function(){
+            var input = $('#search-input').val();
+            window.location.replace(`/list?search=${input}`);
+        })
+
+
+
         $("button.delete").click(function(e){
             const id = e.target.dataset.id;
             const btn = $(this);
