@@ -16,7 +16,7 @@ app.use(passport.session());
 app.use(methodOverride('_method'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/public', express.static('public'));
-app.use('/', require('./routes/shop.js'));
+app.use('/shop', require('./routes/shop.js'));
 app.set('view engine', 'ejs');
 
 MongoClient.connect(
@@ -95,8 +95,6 @@ app.post('/add', (req,res) => {
 
 app.delete('/delete', (req,res) => {
     db.collection('post').findOne({_id: parseInt(req.body._id)}, (error, result) => {
-        console.log(req.user.id)
-        console.log(result.writer);
         if (!req.user && result.writer !== 'none') {
 
         }
