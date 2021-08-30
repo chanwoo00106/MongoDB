@@ -10,16 +10,16 @@
     <%- include('nav.html') %>
 
     <div class="container" style="margin-top: 5%;">
-        <h4>ToDo 추가</h4>
+        <h4>블로그 추가</h4>
         <form action="/add" method="POST">
             <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">할일</span>
+                <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
                 <input type="text" class="form-control" name="title">
             </div>
             <div class="input-group mb-3">
-                <span class="input-group-text" id="inputGroup-sizing-default">Due date</span>
-                <input id="date" type="date" class="form-control" name="date">
+                <textarea type="text" class="form-control" name="text"></textarea>
             </div>
+            <input id="date" type="date" class="form-control" name="date" style="display: none;">
             <button type="submit" class="btn btn-danger">Submit</button>
         </form>
     </div>

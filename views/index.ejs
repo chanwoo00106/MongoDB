@@ -3,18 +3,28 @@
 
 <head>
     <%- include('head.html') %>
-    <title>test</title>
+    <title>main page</title>
 </head>
 
 <body>
     <%- include('nav.html') %>
 
     <div class="jumbotron container">
-        <h1 class="display-4">ToDo</h1>
-        <p class="lead">this page is main</p>
+        <h1 class="display-4">블로그</h1>
+        <p class="lead">This page show blog</p>
         <hr class="my-4">
-        <a class="card-link" href="/shop/pants">바지 파는 페이지</a>
-        <a class="card-link" href="/shop/shirts">셔츠 파는 페이지</a>
+        <div style="display: flex; flex-wrap: wrap;">
+            <% posts.forEach((x)=> { %>
+            <div class="card" style="width: 20%;">
+                <div class="card-body">
+                    <h5 class="card-title"><%= x.title %></h5>
+                    <h6 class="card-subtitle mb-2 text-muted"><%= x.date %></h6>
+                    <p class="card-text">어쩌고 저쩌고</p>
+                    <a href="/detail/<%= x._id %>" class="card-link">자세히 보기</a>
+                </div>
+            </div>
+            <% }); %>
+        </div>
     </div>
 
 
