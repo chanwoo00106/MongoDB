@@ -84,11 +84,28 @@ app.get('/list', (req, res) => {
 
 app.post('/add', (req,res) => {
     res.send('<h1>전송 완료</h1><a href="/">돌아가기</a>');
-    db.collection('counter').findOne({name: '게시물갯수'}, (error, result) => {
-        db.collection('post').insertOne({_id: result.totalPost++, title: req.body.title, text: req.body.text, date: req.body.date}, (error, result) => {
-            db.collection('counter').updateOne({name: '게시물갯수'}, {$inc: {totalPost: 1}});
-        });
-    });
+    const add = async () => {
+        const num = await db.collection('counter').findOne({name: '게시물갯수'});
+        const post = await db.collection('post').findOne({_id: num.totalPost});
+        if (num.totalPost >= 20) {
+            num.totalPost = 0;
+            await db.collection('post').update({_id: num.totalPost}, {$set: {title: req.body.title, text: req.body.text, date: req.body.date}}).then(output => {
+                console.log("update 완료");
+            }).catch(err => {
+                console.log(err);
+            });
+            await db.collection('counter').update({name: '게시물갯수'}, {$set: {totalPost: num.totalPost}});
+        }
+        else if (!post){
+            await db.collection('post').insertOne({_id: num.totalPost++, title: req.body.title, text: req.body.text, date: req.body.date})
+            await db.collection('counter').update({name: '게시물갯수'}, {$set: {totalPost: num.totalPost}});
+        }
+        else {
+            await db.collection('post').update({_id: num.totalPost++}, {$set: {title: req.body.title, text: req.body.text, date: req.body.date}})
+            await db.collection('counter').update({name: '게시물갯수'}, {$set: {totalPost: num.totalPost}});
+        }
+    }
+    add();
 });
 
 
