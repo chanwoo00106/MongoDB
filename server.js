@@ -6,7 +6,7 @@ const MongoClient = require('mongodb').MongoClient;
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const session = require('express-session');
-const multer = require('multer');
+let multer = require('multer');
 
 let storage = multer.diskStorage({
     destination: (req, res, cb) => {
