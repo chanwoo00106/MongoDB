@@ -9,15 +9,15 @@ const session = require('express-session');
 let multer = require('multer');
 
 let storage = multer.diskStorage({
-    destination: (req, res, cb) => {
+    destination: (req, file, cb) => {
         cb(null, './public/image')
     },
-    filename: (req, res, cb) => {
+    filename: (req, file, cb) => {
         cb(null, file.originalname)
     }
 });
 
-let upload = multer({storage})
+let upload = multer({storage: storage})
 
 require('dotenv').config();
 
@@ -48,7 +48,7 @@ app.get('/', loginTF, (req, res) => {
     db.collection('post').find().toArray((error, result) => {
         if (error) console.log(error);
         else {
-            // console.log(req.user);
+        d    // console.log(req.user);
             res.render('mypage.ejs', {posts: result});
         }
     });
@@ -145,7 +145,7 @@ app.get('/upload', (req, res) => {
     res.render('upload.ejs');
 });
 
-app.post('/upload', upload.single('profile'), (req, res) => {
+app.post('/upload', upload.single('profile'), (req, res) => {   
     res.send("<h2>업로드 완료</h2>")
 });
 
