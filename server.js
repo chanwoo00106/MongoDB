@@ -45,7 +45,7 @@ MongoClient.connect(
 );
 
 app.get('/', (req, res) => {
-    db.collection('post').find().limit(20).sort({"_id": -1}).toArray((error, result) => {
+    db.collection('post').find().limit(20).toArray((error, result) => {
         res.render('index.ejs', {posts: result});
     });
 });
@@ -75,7 +75,7 @@ app.get('/list', (req, res) => {
         });
     }
     else {
-        db.collection('post').find().limit(20).sort({"_id": -1}).toArray((error, result) => {
+        db.collection('post').find().limit(20).toArray((error, result) => {
             if (error) console.error(error);
             res.render('list.ejs', {posts: result});
         });
@@ -111,6 +111,7 @@ app.post('/add', (req,res) => {
 
 app.get('/detail/:id', (req, res) => {
     db.collection('post').findOne({_id: Number(req.params.id)}, (error, result) => {
+        console.log(result)
         res.render('detail.ejs', {posts: result});
     });
 });
